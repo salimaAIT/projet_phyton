@@ -1,0 +1,214 @@
+-- Création de la table Clients
+CREATE TABLE Clients (
+    ID_Client INT PRIMARY KEY,
+    Nom VARCHAR(50),
+    Prenom VARCHAR(50),
+    Adresse VARCHAR(100),
+    Telephone VARCHAR(15),
+    Email VARCHAR(50)
+);
+
+-- Création de la table Commandes
+CREATE TABLE Commandes (
+    ID_Commande INT PRIMARY KEY,
+    ID_Client INT,
+    ID_Paiement INT,
+    ID_Livraison INT,
+    Date_Commande DATE,
+    Statut_Commande VARCHAR(20),
+    Total_Commande DECIMAL(10, 2),
+    Adresse_Livraison VARCHAR(100),
+    FOREIGN KEY (ID_Client) REFERENCES Clients(ID_Client),
+    FOREIGN KEY (ID_Paiement) REFERENCES Paiements(ID_Paiement),
+    FOREIGN KEY (ID_Livraison) REFERENCES Livraisons(ID_Livraison)
+);
+
+-- Création de la table Produits
+CREATE TABLE Produits (
+    ID_Produit INT PRIMARY KEY,
+    Nom_Produit VARCHAR(50),
+    Description TEXT,
+    Categorie VARCHAR(50),
+    Prix DECIMAL(10, 2)
+);
+
+-- Création de la table Contenir
+CREATE TABLE Contenir (
+    ID_Contenir INT PRIMARY KEY,
+    ID_Commande INT,
+    ID_Produit INT,
+    Quantite_Produit INT,
+    FOREIGN KEY (ID_Produit) REFERENCES Produits(ID_Produit),
+    FOREIGN KEY (ID_Commande) REFERENCES Commandes(ID_Commande)
+   
+);
+
+-- Création de la table Ingredients
+CREATE TABLE Ingredients (
+    ID_Ingredient INT PRIMARY KEY,
+    Nom_Ingredient VARCHAR(50),
+    Categorie VARCHAR(50)
+);
+
+-- Création de la table Recettes
+CREATE TABLE Recettes (
+    ID_Recette INT PRIMARY KEY,
+    ID_Produit INT,
+    ID_Ingredient INT,
+    Quantite INT,
+    FOREIGN KEY (ID_Produit) REFERENCES Produits(ID_Produit),
+    FOREIGN KEY (ID_Ingredient) REFERENCES Ingredients(ID_Ingredient)
+);
+
+-- Création de la table Avoir
+CREATE TABLE Avoir (
+    ID_Avoir INT PRIMARY KEY,
+    ID_Recette INT,
+    ID_Ingredient INT,
+    Quantite_Ingredients INT,
+    FOREIGN KEY (ID_Recette) REFERENCES Recettes(ID_Recette),
+    FOREIGN KEY (ID_Ingredient) REFERENCES Ingredients(ID_Ingredient)
+    
+);
+
+-- Création de la table Livraisons
+CREATE TABLE Livraisons (
+    ID_Livraison INT PRIMARY KEY,
+    ID_Commande INT,
+    ID_Employe INT,
+    Date_Livraison DATE,
+    Statut_Livraison VARCHAR(20),
+    Nom_Livreur VARCHAR(50),
+    FOREIGN KEY (ID_Commande) REFERENCES Commandes(ID_Commande),
+    FOREIGN KEY (ID_Employe) REFERENCES Employes(ID_Employe)
+);
+
+-- Création de la table Employes
+CREATE TABLE Employes (
+    ID_Employe INT PRIMARY KEY,
+    ID_Commande INT,
+    ID_Livraison INT,
+    Nom VARCHAR(50),
+    Prenom VARCHAR(50),
+    Poste VARCHAR(50),
+    Salaire DECIMAL(10, 2),
+    Date_Embauche DATE,
+    FOREIGN KEY (ID_Commande) REFERENCES Commandes(ID_Commande),
+    FOREIGN KEY (ID_Livraison) REFERENCES Livraisons(ID_Livraison)
+);
+
+-- Création de la table Paiements
+CREATE TABLE Paiements (
+    ID_Paiement INT PRIMARY KEY,
+    ID_Commande INT,
+    Montant DECIMAL(10, 2),
+    Methode_Paiement VARCHAR(50),
+    Date_Paiement DATE,
+    FOREIGN KEY (ID_Commande) REFERENCES Commandes(ID_Commande)
+);
+
+-- Création de la table Preparer
+CREATE TABLE Preparer (
+    ID_Preparer INT PRIMARY KEY,
+    ID_Commande INT,
+    ID_Employe INT,
+    Quantite_Commandes INT,
+    FOREIGN KEY (ID_Employe) REFERENCES Employes(ID_Employe),
+    FOREIGN KEY (ID_Commande) REFERENCES Commandes(ID_Commande)
+     
+);
+
+-- Insérer des clients
+INSERT INTO Clients (ID_Client, Nom, Prenom, Adresse, Telephone, Email)
+VALUES (1, 'Kandi', 'John', '123 Rue Principale', '555-1234', 'john.kandi@email.com'),
+       (2, 'Smith', 'Rabah', '456 Avenue Secondaire', '555-5678', 'rabah.smith@email.com'),
+       (3, 'Akli', 'Lounes', '789 Rue de saint cyr', '555-9876', 'lounes.akli@email.com'),
+       (4, 'Ait', 'Salima', '32 Rue Berth', '555-6543', 'salima.ait@email.com'),
+       (5, 'Ly', 'Yishu', '56 Avenue Allexendre', '555-2310', 'yishu.ly@email.com');
+
+-- Insérer des produits
+INSERT INTO Produits (ID_Produit, Nom_Produit, Description, Categorie, Prix)
+VALUES  (1, 'Pizza Margherita', 'sauce tomate, mozzarella', 'Pizza', 10.99),
+        (2, 'Pizza Chevre miel', 'sauce creme fraiche, mozzarella, , chevre, miel', 'Pizza', 10.99),
+        (3, 'Pizza Savoyard', 'sauce creme fraiche, mozzarella, reblochon, origon', 'Pizza', 10.99),
+        (4, 'Pizza Canibale', 'sauce barbecue, mozzarella, boeuf, poulet, Merguez', 'Pizza', 10.99),
+        (5, 'Coca-Cola', 'Boisson gazeuse', 'Boisson', 2.50),
+        (6, 'Monster', 'Boisson energitique', 'Boisson', 4.50),
+        (7, 'Fuzetea', 'Boisson fraiche', 'Boisson', 2.50),
+        (8, 'Volhic', 'Eau minerale', 'Boisson', 2.50),
+        (9, 'Badoit', 'Boisson gazeuse', 'Boisson', 2.50),
+        (10, 'Salade verte', 'Salade verte, tomate, croutons', 'Salade', 7.50);
+
+-- Insérer des ingrédients
+INSERT INTO Ingredients (ID_Ingredient, Nom_Ingredient, Categorie)
+VALUES 
+        (1, 'Sauce tomate', 'sauce'),
+        (2, 'Creme fraiche', 'sauce'),
+        (3, 'Sauce barbecue', 'sauce'),
+        (4, 'Mozzarella', 'Fromage'),
+        (5, 'Chevre', 'Fromage'),
+        (6, 'Poulet', 'Vainde'),
+        (7, 'Boeuf', 'Vainde'),
+        (8, 'Merguez', 'Vainde'),
+        (9, 'Tomate', 'Légumes'),
+        (10, 'Salade', 'Légumes'),
+        (11, 'Croutons', 'Pain'),
+        (12, 'Origon', 'Légumes'),
+        (13, 'Miel', 'extra');
+       
+
+-- Insérer des recettes
+INSERT INTO Recettes (ID_Recette, ID_Produit, ID_Ingredient, Quantite)
+VALUES  (1, 1, 1, 2),
+        (2, 2, 2, 2),
+        (3, 3, 12, 1),
+        (4, 4, 6, 3),
+        (5, 10, 10, 2),
+        (6, 2, 4, 2),
+        (7, 2, 5, 1);
+
+-- Insérer des commandes
+INSERT INTO Commandes (ID_Commande, ID_Client, ID_Paiement, ID_Livraison, Date_Commande, Statut_Commande, Total_Commande, Adresse_Livraison)
+VALUES  (1, 1, 1, 1, '2023-10-06', 'En cours', 15.99, '123 Rue Principale'),
+        (2, 2, 1, 1, '2023-05-12', 'Livrer', 10.99, '456 Avenue Secondaire'),
+        (3, 3, 1, 1, '2023-09-18', 'Livrer', 10.99, '789 Rue de saint cyr'),
+        (4, 5, 1, 1, '2023-08-23', 'Livrer', 10.99, '56 Avenue Allexendre'),
+        (5, 5, 1, 1, '2023-10-06', 'En cours', 10.99, '56 Avenue Allexendre'),
+        (6, 4, 1, 1, '2023-08-23', 'Livrer', 10.99, '32 Rue Berth'),
+        (7, 5, 1, 1, '2023-08-29', 'Annuller', 10.99, '56 Avenue Allexendre'),
+        (8, 5, 1, 1, '2023-10-06', 'En cours', 02.50, '56 Avenue Allexendre');
+        
+
+-- Insérer des livraisons
+INSERT INTO Livraisons (ID_Livraison, ID_Commande, ID_Employe, Date_Livraison, Statut_Livraison, Nom_Livreur)
+VALUES (1, 1, 1, '2023-10-06', 'En cours', 'Bob'),
+        (2, 2, 1, '2023-05-12', 'Livrer', 'Jo'),
+        (3, 3, 1, '2023-09-18', 'Livrer', 'Bob'),
+        (4, 4, 1,'2023-08-23', 'Livrer', 'Alex'),
+        (5, 5, 1, '2023-10-06', 'En cours', 'Alex'),
+        (6, 6, 1, '2023-08-23', 'Livrer', 'Bob'),
+        (7, 7, 1, '2023-08-29', 'Annuller', 'Jo');
+
+-- Insérer des employés
+INSERT INTO Employes (ID_Employe, ID_Commande, ID_Livraison, Nom, Prenom, Poste, Salaire, Date_Embauche)
+VALUES (1, 4, 4, 'Benoit', 'Alex', 'Livreur', 900.00, '2023-02-15'),
+       (2, 6, 6, 'Franco', 'Bob', 'Livreur', 900.00, '2023-02-25'),
+       (3, 2, 2, 'Gérar', 'Jo', 'Livreur', 900.00, '2023-02-25');
+
+-- Insérer des paiements
+INSERT INTO Paiements (ID_Paiement, ID_Commande, Montant, Methode_Paiement, Date_Paiement)
+VALUES  (1, 1, 15.99, 'Carte de crédit', '2023-10-06'),
+        (2, 2, 10.99, 'Carte de crédit', '2023-15-12'),
+        (3, 3, 10.99, 'Espèce', '2023-09-18'),
+        (4, 4, 10.99, 'Carte de crédit', '2023-08-23'),
+        (5, 5, 10.99, 'Carte de crédit', '2023-10-06'),
+        (6, 6, 10.99, 'Espèce', '2023-08-23');
+
+
+
+ 
+SELECT ID_Ingredient, Nom_Ingredient, SUM(Quantite) AS QuantiteTotale
+FROM Recettes
+JOIN Ingredients ON Recettes.ID_Ingredient = Ingredients.ID_Ingredient
+GROUP BY ID_Ingredient, Nom_Ingredient;
+
