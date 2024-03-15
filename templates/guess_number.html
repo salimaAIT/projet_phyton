@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devine le Nombre</title>
+</head>
+<body>
+    <h1>Bienvenue dans Devine le Nombre !</h1>
+    <p>Je pense à un nombre entre 1 et 100. Peux-tu le deviner ?</p>
+    <form action="/guess_number" method="post">
+        <label for="essai">Entre ton essai :</label><br>
+        <input type="number" id="essai" name="essai"><br>
+        <input type="submit" value="Devine">
+    </form>  
+    <p>{{ message }}</p>
+    
+</body>
+</html>
