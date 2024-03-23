@@ -12,7 +12,7 @@ VALUES  (1, 'salima', '1234');
 
 CREATE TABLE scores (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
+    username TEXT,
     score INTEGER,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    FOREIGN KEY(username) REFERENCES users(id)
 );

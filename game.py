@@ -49,8 +49,9 @@ def login():
     cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
     user = cursor.fetchone()
     if user:
-         flash('Login successful!', 'success')  # Flash success message
-         return render_template('guess_number.html')  # Assuming 'start' is the endpoint for the start page
+         flash('Login successful!', 'success') 
+         session['username'] = username
+         return redirect(url_for('devine_le_nombre')) 
     else:
         return 'Nom d\'utilisateur ou mot de passe incorrect'
     
@@ -93,6 +94,13 @@ def query_db(query, args=(), one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+# Fonction pour enregistrer le score dans la base de données 
+def enregistrer_score_utilisateur(username, score):
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO scores (username, score) VALUES (?, ?)", (username, score))
+    conn.commit()
+
 
 
 # Fonction pour initialiser une nouvelle partie de devine le nombre
@@ -116,6 +124,7 @@ def devine_le_nombre():
             message = "Le nombre que tu cherches est plus petit."
         else:
             message = f"Bravo ! Tu as deviné le nombre en {session['nombre_de_essais']} essais."
+            enregistrer_score_utilisateur(session['username'], session['nombre_de_essais'])
             session.pop('nombre_a_deviner')
             session.pop('nombre_de_essais')
             session.pop('limite_essais')
